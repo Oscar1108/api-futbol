@@ -34,6 +34,12 @@ function sendJson(Response $response, $data, int $status = 200): Response {
     return $response->withHeader('Content-Type', 'application/json')->withStatus($status);
 }
 
+// ✅ Ruta raíz para evitar error 502
+$app->get('/', function (Request $request, Response $response) {
+    $response->getBody()->write("🚀 API Slim funcionando correctamente.");
+    return $response;
+});
+
 // Ruta de prueba
 $app->get('/hello', function (Request $request, Response $response) {
     $response->getBody()->write("¡Hola desde Slim!");
