@@ -11,8 +11,24 @@ $app->addRoutingMiddleware();
 $app->addBodyParsingMiddleware();
 $app->addErrorMiddleware(true, true, true);
 
-// Conexión a base de datos InfinityFree
 function getDb() {
+    $host = 'mysql-render-db';  // 👈 nombre exacto del servicio Render
+    $db   = 'torneo_futbol';
+    $user = 'appuser';
+    $pass = 'app123';
+
+    try {
+        $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8mb4", $user, $pass);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return $pdo;
+    } catch (PDOException $e) {
+        throw new PDOException("Error de conexión: " . $e->getMessage(), (int)$e->getCode());
+    }
+}
+
+
+// Conexión a base de datos InfinityFree
+/*function getDb() {
     $host = 'sql213.infinityfree.com';
     $db   = 'if0_39114660_torneo_futbol';
     $user = 'if0_39114660';
@@ -25,7 +41,7 @@ function getDb() {
     } catch (PDOException $e) {
         throw new PDOException("Error de conexión: " . $e->getMessage(), (int)$e->getCode());
     }
-}
+}*/
 
 // Función para enviar respuestas JSON
 function sendJson(Response $response, $data, int $status = 200): Response {
