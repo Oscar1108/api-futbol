@@ -3,7 +3,8 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
+
 
 $app = AppFactory::create();
 
@@ -12,6 +13,7 @@ $app->addBodyParsingMiddleware();
 $app->addErrorMiddleware(true, true, true);
 
 // Conexión a base de datos
+
 function getDb() {
     $host = 'sql213.infinityfree.com';
     $db   = 'if0_39114660_torneo_futbol';
@@ -26,6 +28,7 @@ function getDb() {
         throw new PDOException("Error de conexión: " . $e->getMessage(), (int)$e->getCode());
     }
 }
+
 
 // Respuesta JSON estándar
 function sendJson(Response $response, $data, int $status = 200): Response {
