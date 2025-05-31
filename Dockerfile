@@ -19,8 +19,12 @@ RUN curl -sS https://getcomposer.org/installer | php && \
     mv composer.phar /usr/local/bin/composer && \
     composer install
 
-# Configuración del virtualhost para Slim
+# Configura virtualhost para Slim (pública solo /public)
 RUN echo "<Directory /var/www/html/public>\n\
     AllowOverride All\n\
 </Directory>" > /etc/apache2/conf-available/slim.conf && \
     a2enconf slim
+
+# 🔧 Establece el directorio público como raíz del servidor
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -ri -e 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
