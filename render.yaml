@@ -1,10 +1,7 @@
 services:
-  - type: web
-    name: slim-api
+  - type: private
+    name: mysql_render_db
     env: docker
+    dockerfilePath: ./Dockerfile
     plan: free
-    dockerContext: .
-    dockerfilePath: Dockerfile
-    envVars:
-      - key: PORT
-        value: 8080
+    autoDeploy: true
