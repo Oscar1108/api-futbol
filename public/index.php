@@ -5,15 +5,13 @@ use Slim\Factory\AppFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-
 $app = AppFactory::create();
 
 $app->addRoutingMiddleware();
 $app->addBodyParsingMiddleware();
 $app->addErrorMiddleware(true, true, true);
 
-// Conexión a base de datos
-
+// Conexión a base de datos InfinityFree
 function getDb() {
     $host = 'sql213.infinityfree.com';
     $db   = 'if0_39114660_torneo_futbol';
@@ -29,22 +27,20 @@ function getDb() {
     }
 }
 
-
-// Respuesta JSON estándar
+// Función para enviar respuestas JSON
 function sendJson(Response $response, $data, int $status = 200): Response {
     $json = json_encode($data);
-    $response->getBody()->write($json ?: json_encode(['error' => 'JSON encoding error']));
+    $response->getBody()->write($json ?: json_encode(['error' => 'Error al codificar JSON']));
     return $response->withHeader('Content-Type', 'application/json')->withStatus($status);
 }
 
-// Rutas
-
+// Ruta de prueba
 $app->get('/hello', function (Request $request, Response $response) {
     $response->getBody()->write("¡Hola desde Slim!");
     return $response->withHeader('Content-Type', 'text/plain');
 });
 
-// GET: todos los equipos
+// GET: lista de equipos
 $app->get('/equipos', function (Request $request, Response $response) {
     $db = getDb();
     $stmt = $db->query("SELECT * FROM equipos");
@@ -52,7 +48,7 @@ $app->get('/equipos', function (Request $request, Response $response) {
     return sendJson($response, $equipos);
 });
 
-// POST: nuevo equipo
+// POST: agregar equipo
 $app->post('/equipos', function (Request $request, Response $response) {
     $data = $request->getParsedBody();
     $sql = "INSERT INTO equipos (nombre, departamento) VALUES (:nombre, :departamento)";
@@ -65,7 +61,7 @@ $app->post('/equipos', function (Request $request, Response $response) {
     return sendJson($response, ['mensaje' => 'Equipo agregado con éxito'], 201);
 });
 
-// POST: nuevo jugador
+// POST: agregar jugador
 $app->post('/jugadores', function (Request $request, Response $response) {
     $data = $request->getParsedBody();
     $sql = "INSERT INTO jugadores (nombre, posicion, edad, equipo_id) VALUES (:nombre, :posicion, :edad, :equipo_id)";
